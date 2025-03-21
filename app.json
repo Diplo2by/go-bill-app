@@ -38,7 +38,8 @@
         {
           "cameraPermission": "Allow goBillApp to access your camera"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
