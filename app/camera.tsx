@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
-import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
+import React, { useRef, useState } from 'react';
+import { Text, TouchableOpacity, View, ActivityIndicator, Alert } from 'react-native';
+import { CameraType, CameraView, CameraViewRef, useCameraPermissions } from 'expo-camera';
 import { Link } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_500Medium, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_400Regular_Italic } from '@expo-google-fonts/montserrat';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import axios from "axios"
 
 const Camera = () => {
     const [facing, setFacing] = useState<CameraType>('back');
     const [perms, requestPerms] = useCameraPermissions();
     const [isCapturing, setIsCapturing] = useState(false);
+    const cameraRef = useRef<CameraView>(null);
 
     // Load Montserrat font family
     const [fontsLoaded] = useFonts({
@@ -75,18 +77,89 @@ const Camera = () => {
         setFacing(curr => (curr === 'back' ? "front" : "back"));
     };
 
-    const handleCapture = () => {
+    const handleCapture = async () => {
+        if (!cameraRef.current) return;
         setIsCapturing(true);
-        // Simulate processing - in a real app, replace with actual photo capture logic
-        setTimeout(() => {
-            setIsCapturing(false);
-        }, 1500);
+
+        try {
+            const photo = await cameraRef.current.takePictureAsync({
+                quality: 0.7,
+                base64: false,
+            });
+            await uploadImage(photo?.uri || "")
+
+        } catch (error) {
+            console.error('Error capturing or uploading image:', error);
+            Alert.alert(
+                'Error',
+                'Failed to capture or process image. Please try again.',
+                [{ text: 'OK' }]
+            );
+        } finally {
+            setIsCapturing(false)
+        }
+    };
+
+
+    const uploadImage = async (uri: string) => {
+        // Prepare Payload
+        const formData = new FormData();
+
+        // Get file name from URI
+        const uriParts = uri.split('/');
+        const fileName = uriParts[uriParts.length - 1];
+
+        // Append the image to form data
+        formData.append('image', {
+            uri: uri,
+            name: fileName,
+            type: 'image/jpeg',
+        } as any);
+
+        try {
+            setIsCapturing(true);
+
+            console.log('Uploading image to:', 'https://go-bill.vercel.app/api/analyze-bill');
+
+            const response = await axios.post(
+                'https://go-bill.vercel.app/api/analyze-bill',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    timeout: 30000, // 30 second  timeout
+                }
+            );
+
+            console.log('Upload successful:', response.data);
+
+            Alert.alert(
+                'Success',
+                'Bill analyzed successfully!',
+                [{ text: 'OK' }]
+            );
+
+        } catch (error) {
+            console.error('Upload failed:', error);
+
+            if (axios.isAxiosError(error)) {
+                console.log('Response status:', error.response?.status);
+                console.log('Response data:', error.response?.data);
+            }
+
+            Alert.alert(
+                'Upload Failed',
+                'Could not analyze the bill. Please try again.',
+                [{ text: 'OK' }]
+            );
+        }
     };
 
     return (
         <SafeAreaView className=' flex-1'>
             <View className="flex-1 items-center">
-                <CameraView className="flex-1" facing={facing}
+                <CameraView className="flex-1" facing={facing} ref={cameraRef}
                     style={{
                         height: "100%",
                         width: "100%"
