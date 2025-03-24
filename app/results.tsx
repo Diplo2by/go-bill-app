@@ -1,10 +1,12 @@
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
 import { Link, useLocalSearchParams } from 'expo-router'
 import { Montserrat_400Regular, Montserrat_500Medium, Montserrat_600SemiBold, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { useFonts } from 'expo-font';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import * as Clipboard from 'expo-clipboard';
+import { formattedCalorieCount } from '@/util/script';
 
 interface ApiResponse {
     data: {
@@ -95,6 +97,15 @@ const results = () => {
         month: 'long',
         day: 'numeric'
     });
+
+    const copyToClipboard = async () => {
+        if (!apiResponse || !apiResponse.success) {
+            Alert.alert("Error", "No data available to copy");
+            return;
+        }
+        const clipboardText = formattedCalorieCount(apiResponse)
+        await Clipboard.setStringAsync(clipboardText as string)
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-green-100">
@@ -192,16 +203,16 @@ const results = () => {
                 ))}
             </ScrollView>
 
-            
+
             <View className="px-6 mb-8">
                 <View className="flex-row space-x-3 gap-2">
-                    <TouchableOpacity className="flex-1">
+                    <TouchableOpacity className="flex-1" onPress={copyToClipboard}>
                         <View className="p-4 rounded-xl bg-emerald-500 shadow-sm">
                             <Text
                                 style={{ fontFamily: 'MontserratBold' }}
                                 className="text-white text-center"
                             >
-                                Save Results
+                                Copy to Clipboard
                             </Text>
                         </View>
                     </TouchableOpacity>
