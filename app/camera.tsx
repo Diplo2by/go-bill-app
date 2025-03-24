@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Text, TouchableOpacity, View, ActivityIndicator, Alert } from 'react-native';
 import { CameraType, CameraView, CameraViewRef, useCameraPermissions } from 'expo-camera';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { Montserrat_400Regular, Montserrat_500Medium, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_400Regular_Italic } from '@expo-google-fonts/montserrat';
 import { Ionicons } from '@expo/vector-icons';
@@ -134,11 +134,17 @@ const Camera = () => {
 
             console.log('Upload successful:', response.data);
 
-            Alert.alert(
-                'Success',
-                'Bill analyzed successfully!',
-                [{ text: 'OK' }]
-            );
+            // Alert.alert(
+            //     'Success',
+            //     'Bill analyzed successfully!',
+            //     [{ text: 'OK' }]
+            // );
+
+            router.push({
+                pathname:"/results",
+                params:{data:JSON.stringify(response.data)}
+            })
+
 
         } catch (error) {
             console.error('Upload failed:', error);
