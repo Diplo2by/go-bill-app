@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "goBillApp",
-    "slug": "goBillApp",
+    "name": "CalorieScan",
+    "slug": "CalorieScan",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/receipt.png",
     "scheme": "gobill",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -15,7 +15,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.diplo2by.goBillApp"
     },
     "web": {
       "bundler": "metro",
@@ -36,13 +41,21 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow goBillApp to access your camera"
+          "cameraPermission": "Allow CalorieScan to access your camera"
         }
       ],
       "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "138e0490-5b58-4c92-b102-993a3ae24bc5"
+      }
     }
   }
 }
