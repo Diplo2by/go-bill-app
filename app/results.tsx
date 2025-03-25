@@ -19,6 +19,8 @@ const results = () => {
 
     const { data } = useLocalSearchParams();
 
+    console.log("here")
+
     let apiResponse: ApiResponse | null = null;
 
     try {
@@ -111,7 +113,7 @@ const results = () => {
         <SafeAreaView className="flex-1 bg-green-100">
             <View className="pt-6 px-6 mb-4">
                 <View className="flex-row items-center justify-between">
-                    <Link href="/" asChild>
+                    <Link href="/" replace asChild>
                         <TouchableOpacity>
                             <View className="w-10 h-10 rounded-full bg-white items-center justify-center shadow-sm">
                                 <Ionicons name="home-outline" size={22} color="#10b981" />

@@ -95,6 +95,7 @@ export default function Index() {
       <View className="items-center mt-auto mb-10 px-6">
         <Link
           href="/camera"
+          replace
           asChild
         >
           <TouchableOpacity>

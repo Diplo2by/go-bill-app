@@ -134,15 +134,9 @@ const Camera = () => {
 
             console.log('Upload successful:', response.data);
 
-            // Alert.alert(
-            //     'Success',
-            //     'Bill analyzed successfully!',
-            //     [{ text: 'OK' }]
-            // );
-
             router.push({
-                pathname:"/results",
-                params:{data:JSON.stringify(response.data)}
+                pathname: "/results",
+                params: { data: JSON.stringify(response.data) }
             })
 
 
