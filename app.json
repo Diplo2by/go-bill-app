@@ -1,20 +1,23 @@
 {
   "expo": {
     "name": "CalorieScan",
-    "slug": "CalorieScan",
+    "slug": "calorie-scan",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/receipt.png",
+    "icon": "./assets/images/icon2.png",
+    "darkIcon": "./assets/images/icon-dark.png",
     "scheme": "gobill",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/images/icon2.png",
+      "bundleIdentifier": "com.diplo2by.goBillApp"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/icon2.png",
+        "backgroundColor": "#10b981"
       },
       "permissions": [
         "android.permission.CAMERA",
@@ -26,6 +29,12 @@
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
+    },
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "imageWidth": 200,
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
     "plugins": [
       "expo-router",
@@ -54,7 +63,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "138e0490-5b58-4c92-b102-993a3ae24bc5"
+        "projectId": "d933369f-0075-46e4-b503-5f44d406b392"
       }
     }
   }
