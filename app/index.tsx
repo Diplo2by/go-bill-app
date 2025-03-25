@@ -1,8 +1,10 @@
 import { Link } from "expo-router";
-import { Image, Text, View, TouchableOpacity } from "react-native";
+import { Image, Text, View, TouchableOpacity, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from 'expo-font';
+import { useNetInfo } from '@react-native-community/netinfo';
 import { Montserrat_400Regular, Montserrat_500Medium, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_400Regular_Italic } from '@expo-google-fonts/montserrat';
+import { useEffect, useState } from "react";
 
 export default function Index() {
   // Load Montserrat font family
@@ -14,6 +16,19 @@ export default function Index() {
     MontserratItalic: Montserrat_400Regular_Italic,
   });
 
+  const netinfo = useNetInfo();
+  const [isConnected, setIsConnected] = useState(true);
+
+  useEffect(() => {
+    if (!netinfo.isConnected) {
+      setIsConnected(false)
+    }
+    else {
+      setIsConnected(true)
+    }
+  }, [netinfo.isConnected])
+
+
   // Optional: Add a loading screen while fonts are loading
   if (!fontsLoaded) {
     return (
@@ -23,8 +38,44 @@ export default function Index() {
     );
   }
 
+
+
   return (
     <SafeAreaView className="flex-1 bg-green-100 font-black">
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={!isConnected}
+      >
+        <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+          <View className="w-80 bg-white rounded-2xl p-6 items-center">
+            <Text
+              style={{ fontFamily: 'MontserratBold' }}
+              className="text-xl text-emerald-700 mb-4"
+            >
+              No Internet Connection
+            </Text>
+
+            <Text
+              style={{ fontFamily: 'MontserratRegular' }}
+              className="text-center text-gray-600 mb-6"
+            >
+              Please check your internet connection and try again.
+            </Text>
+
+            <TouchableOpacity
+              className="bg-emerald-500 rounded-xl px-6 py-3"
+            >
+              <Text
+                style={{ fontFamily: 'MontserratSemiBold' }}
+                className="text-white text-center"
+              >
+                {isConnected ? "Dismiss" : "Try Again"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <View className="pt-6 px-6">
         <View className="items-center bg-white rounded-3xl py-5 shadow-md">
           <Text className="text-4xl font-bold">
