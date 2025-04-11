@@ -7,6 +7,7 @@ import { Montserrat_400Regular, Montserrat_500Medium, Montserrat_600SemiBold, Mo
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import axios from "axios"
+import * as ImagePicker from 'expo-image-picker'
 
 const Camera = () => {
     const [facing, setFacing] = useState<CameraType>('back');
@@ -156,6 +157,36 @@ const Camera = () => {
         }
     };
 
+    const pickImage = async () => {
+        try {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+            if (status !== 'granted') {
+                Alert.alert('Permission needed', 'We need access to your photos to select bills');
+                return;
+            }
+
+            const resultImage = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [3, 4],
+                quality: 0.7,
+                mediaTypes: ['images']
+            })
+
+            if (!resultImage.canceled && resultImage.assets && resultImage.assets.length > 0) {
+                const selectedImg = resultImage.assets[0]
+                await uploadImage(selectedImg.uri)
+            }
+
+        } catch (error) {
+            console.error('Error picking image from gallery:', error);
+            Alert.alert(
+                'Error',
+                'Failed to pick image from gallery. Please try again.',
+                [{ text: 'OK' }]
+            );
+        }
+    }
+
     return (
         <SafeAreaView className=' flex-1'>
             <View className="flex-1 items-center">
@@ -204,25 +235,34 @@ const Camera = () => {
                     </View>
 
                     <View className="pb-10 pt-6 items-center justify-center bg-black/30 backdrop-blur-md">
-                        <TouchableOpacity
-                            onPress={handleCapture}
-                            disabled={isCapturing}
-                            className="items-center"
-                        >
-                            <View className="w-16 h-16 rounded-full bg-white border-4 border-emerald-500 items-center justify-center mb-2">
-                                {isCapturing ? (
-                                    <ActivityIndicator color="#10b981" size="large" />
-                                ) : (
-                                    <View className="w-12 h-12 rounded-full bg-emerald-500" />
-                                )}
-                            </View>
-                            <Text
-                                style={{ fontFamily: 'MontserratSemiBold' }}
-                                className="text-white"
+                        <View className=' flex-row items-center w-full justify-start gap-[6.75rem] px-4 '>
+                            <TouchableOpacity onPress={pickImage} disabled={isCapturing} className='items-center'>
+                                <View className=' w-16 h-16 rounded-full bg-white/80 items-center justify-center mb-2'>
+                                    <Ionicons name="image-outline" size={24} color="#10b981" />
+                                </View>
+                                <Text style={{ fontFamily: 'MontserratMedium' }} className=' text-white '>Gallery</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={handleCapture}
+                                disabled={isCapturing}
+                                className="items-center"
                             >
-                                {isCapturing ? "Processing..." : "Capture"}
-                            </Text>
-                        </TouchableOpacity>
+                                <View className="w-16 h-16 rounded-full bg-white border-4 border-emerald-500 items-center justify-center mb-2">
+                                    {isCapturing ? (
+                                        <ActivityIndicator color="#10b981" size="large" />
+                                    ) : (
+                                        <View className="w-12 h-12 rounded-full bg-emerald-500" />
+                                    )}
+                                </View>
+                                <Text
+                                    style={{ fontFamily: 'MontserratSemiBold' }}
+                                    className="text-white"
+                                >
+                                    {isCapturing ? "Processing..." : "Capture"}
+                                </Text>
+                            </TouchableOpacity>
+                            <View/>
+                        </View>
                     </View>
                 </CameraView>
             </View>
