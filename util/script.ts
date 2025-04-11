@@ -1,4 +1,4 @@
-interface ApiResponse {
+export interface ApiResponse {
     data: {
         [foodItem: string]: number;  // Food item name -> calories
     };

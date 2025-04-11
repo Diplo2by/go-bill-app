@@ -1,25 +1,16 @@
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { ActivityIndicator, Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
 import { Link, useLocalSearchParams } from 'expo-router'
 import { Montserrat_400Regular, Montserrat_500Medium, Montserrat_600SemiBold, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { useFonts } from 'expo-font';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
-import { formattedCalorieCount } from '@/util/script';
-
-interface ApiResponse {
-    data: {
-        [foodItem: string]: number;  // Food item name -> calories
-    };
-    success: boolean;
-}
+import { ApiResponse, formattedCalorieCount } from '@/util/script';
 
 const results = () => {
 
     const { data } = useLocalSearchParams();
-
-    console.log("here")
 
     let apiResponse: ApiResponse | null = null;
 
